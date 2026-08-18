@@ -22,6 +22,15 @@ jobs:
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
 
+      - name: TEMP show formatted output
+        if: always()
+        run: |
+          for f in lib/main.dart lib/screens/rede_local_screen.dart lib/screens/redes_wifi_screen.dart lib/screens/scanner_portas_screen.dart lib/services/network_scanner_service.dart lib/services/port_scanner_service.dart lib/services/wifi_network_scanner_service.dart test/widget_test.dart; do
+            echo "=====FILE_START:$f====="
+            dart format --output=show "$f"
+            echo "=====FILE_END:$f====="
+          done
+
       - name: Analyze
         run: flutter analyze
 
