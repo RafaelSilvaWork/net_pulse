@@ -113,7 +113,7 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
         buffer.writeln('Porta ${r.port} (${r.service}): ABERTA');
       }
     }
-    SharePlus.instance.share(ShareParams(text: buffer.toString()));
+    Share.share(buffer.toString());
   }
 
   Future<void> _usarMeuIp() async {

@@ -121,7 +121,7 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
         buffer.writeln(host.ip);
       }
     }
-    SharePlus.instance.share(ShareParams(text: buffer.toString()));
+    Share.share(buffer.toString());
   }
 
   @override
