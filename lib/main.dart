@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'screens/historico_screen.dart';
 import 'screens/rede_local_screen.dart';
 import 'screens/scanner_portas_screen.dart';
 
@@ -43,6 +44,13 @@ class _NetPulseHomeState extends State<NetPulseHome> {
   final List<Widget> _telas = [
     const ScannerPortasScreen(),
     const RedeLocalScreen(),
+    const HistoricoScreen(),
+  ];
+
+  static const List<(IconData, String)> _destinations = [
+    (Icons.radar, 'Scanner de Portas'),
+    (Icons.devices, 'Dispositivos na Rede'),
+    (Icons.history, 'Histórico'),
   ];
 
   @override
@@ -98,15 +106,12 @@ class _NetPulseHomeState extends State<NetPulseHome> {
               selectedIndex: _currentIndex,
               onDestinationSelected: _onDestinationSelected,
               labelType: NavigationRailLabelType.all,
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(Icons.radar),
-                  label: Text('Scanner de Portas'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.devices),
-                  label: Text('Dispositivos na Rede'),
-                ),
+              destinations: [
+                for (final (icon, label) in _destinations)
+                  NavigationRailDestination(
+                    icon: Icon(icon),
+                    label: Text(label),
+                  ),
               ],
             ),
             const VerticalDivider(width: 1),
@@ -121,15 +126,9 @@ class _NetPulseHomeState extends State<NetPulseHome> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: _onDestinationSelected,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.radar),
-            label: 'Scanner de Portas',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.devices),
-            label: 'Dispositivos na Rede',
-          ),
+        destinations: [
+          for (final (icon, label) in _destinations)
+            NavigationDestination(icon: Icon(icon), label: label),
         ],
       ),
     );

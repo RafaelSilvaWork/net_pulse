@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../services/local_network_info.dart';
 import '../services/network_scanner_service.dart';
+import '../services/scan_history_service.dart';
 
 class RedeLocalScreen extends StatefulWidget {
   const RedeLocalScreen({super.key});
@@ -85,6 +87,18 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
       },
     );
 
+    if (!_cancelRequested) {
+      await ScanHistoryService.add(
+        ScanHistoryEntry(
+          type: ScanType.network,
+          target: '$subnetPrefix.0/24',
+          timestamp: DateTime.now(),
+          summaryLines: [for (final h in _dispositivosAtivos) h.ip],
+          matchCount: _dispositivosAtivos.length,
+        ),
+      );
+    }
+
     if (!mounted) return;
     setState(() {
       _isSearching = false;
@@ -94,6 +108,20 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
 
   void _cancelarScan() {
     setState(() => _cancelRequested = true);
+  }
+
+  void _compartilharResultados() {
+    final buffer = StringBuffer(
+      'NetPulse — dispositivos encontrados na rede local\n\n',
+    );
+    if (_dispositivosAtivos.isEmpty) {
+      buffer.writeln('Nenhum dispositivo encontrado.');
+    } else {
+      for (final host in _dispositivosAtivos) {
+        buffer.writeln(host.ip);
+      }
+    }
+    SharePlus.instance.share(ShareParams(text: buffer.toString()));
   }
 
   @override
@@ -183,12 +211,24 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
               ),
             ],
             const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Dispositivos Encontrados:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Dispositivos Encontrados:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                if (!_isSearching && _dispositivosAtivos.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(Icons.share),
+                    tooltip: 'Compartilhar resultados',
+                    onPressed: _compartilharResultados,
+                  ),
+              ],
             ),
             const SizedBox(height: 10),
             Expanded(

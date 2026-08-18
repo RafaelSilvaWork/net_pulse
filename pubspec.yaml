@@ -1,5 +1,5 @@
 name: net_pulse
-description: "A new Flutter project."
+description: "Scanner de portas e de dispositivos na rede local, com detecção do IP do próprio aparelho."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -38,8 +38,12 @@ dependencies:
   # Used to detect the device's real WiFi IP/subnet for local network scans.
   network_info_plus: ^6.1.4
 
-  # Persists whether the user already acknowledged the responsible-use notice.
+  # Persists whether the user already acknowledged the responsible-use notice,
+  # and stores the recent scan history.
   shared_preferences: ^2.3.3
+
+  # Shares scan results through the OS share sheet.
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:

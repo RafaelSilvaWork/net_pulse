@@ -1,4 +1,4 @@
-package com.example.net_pulse
+package com.rafaswaag.netpulse
 
 import io.flutter.embedding.android.FlutterActivity
 

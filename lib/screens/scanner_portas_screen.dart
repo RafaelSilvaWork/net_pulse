@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../services/local_network_info.dart';
 import '../services/port_scanner_service.dart';
+import '../services/scan_history_service.dart';
 
 class ScannerPortasScreen extends StatefulWidget {
   const ScannerPortasScreen({super.key});
@@ -77,12 +79,41 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
       },
     );
 
+    if (!_cancelRequested) {
+      final abertas = _resultados.where((r) => r.isOpen).toList();
+      await ScanHistoryService.add(
+        ScanHistoryEntry(
+          type: ScanType.ports,
+          target: ip,
+          timestamp: DateTime.now(),
+          summaryLines: [
+            for (final r in abertas) 'Porta ${r.port} (${r.service})',
+          ],
+          matchCount: abertas.length,
+        ),
+      );
+    }
+
     if (!mounted) return;
     setState(() => _isScanning = false);
   }
 
   void _cancelarScan() {
     setState(() => _cancelRequested = true);
+  }
+
+  void _compartilharResultados() {
+    final ip = _ipController.text.trim();
+    final abertas = _resultados.where((r) => r.isOpen).toList();
+    final buffer = StringBuffer('NetPulse — varredura de portas em $ip\n\n');
+    if (abertas.isEmpty) {
+      buffer.writeln('Nenhuma porta aberta encontrada.');
+    } else {
+      for (final r in abertas) {
+        buffer.writeln('Porta ${r.port} (${r.service}): ABERTA');
+      }
+    }
+    SharePlus.instance.share(ShareParams(text: buffer.toString()));
   }
 
   Future<void> _usarMeuIp() async {
@@ -180,12 +211,24 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
               ),
             ],
             const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Resultados:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Resultados:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                if (!_isScanning && _resultados.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(Icons.share),
+                    tooltip: 'Compartilhar resultados',
+                    onPressed: _compartilharResultados,
+                  ),
+              ],
             ),
             const SizedBox(height: 10),
             Expanded(
