@@ -176,9 +176,7 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
                           ? const SizedBox(
                               width: 20,
                               height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.radar),
                       label: Text(
@@ -216,10 +214,7 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
                 const Expanded(
                   child: Text(
                     'Resultados:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 if (!_isScanning && _resultados.isNotEmpty)
@@ -239,9 +234,7 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
                   return Card(
                     child: ListTile(
                       leading: Icon(
-                        resultado.isOpen
-                            ? Icons.lock_open
-                            : Icons.lock_outline,
+                        resultado.isOpen ? Icons.lock_open : Icons.lock_outline,
                         color: resultado.isOpen ? Colors.green : Colors.grey,
                       ),
                       title: Text(
@@ -250,9 +243,7 @@ class _ScannerPortasScreenState extends State<ScannerPortasScreen> {
                       trailing: Text(
                         resultado.isOpen ? 'ABERTA' : 'Fechada',
                         style: TextStyle(
-                          color: resultado.isOpen
-                              ? Colors.green
-                              : Colors.grey,
+                          color: resultado.isOpen ? Colors.green : Colors.grey,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

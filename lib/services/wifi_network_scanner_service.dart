@@ -46,8 +46,7 @@ class WifiNetworkScannerService {
       throw WifiScanException(_canGetMessage(canGet));
     }
 
-    final resultsFuture = fws.WiFiScan.instance.onScannedResultsAvailable
-        .first;
+    final resultsFuture = fws.WiFiScan.instance.onScannedResultsAvailable.first;
     await fws.WiFiScan.instance.startScan();
     final accessPoints = await resultsFuture.timeout(
       const Duration(seconds: 8),

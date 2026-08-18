@@ -33,18 +33,18 @@ class NetworkScannerService {
     for (var base = startHost; base <= endHost; base += concurrency) {
       if (isCancelled()) return;
       final batchEnd = (base + concurrency - 1).clamp(startHost, endHost);
-      final hosts = [
-        for (var i = base; i <= batchEnd; i++) '$subnetPrefix.$i',
-      ];
-      await Future.wait(hosts.map((ip) async {
-        final reachable = await _isHostReachable(ip, probePorts, timeout);
-        completed++;
-        if (isCancelled()) return;
-        onProgress?.call(completed, total);
-        if (reachable) {
-          onHostFound(HostScanResult(ip: ip));
-        }
-      }));
+      final hosts = [for (var i = base; i <= batchEnd; i++) '$subnetPrefix.$i'];
+      await Future.wait(
+        hosts.map((ip) async {
+          final reachable = await _isHostReachable(ip, probePorts, timeout);
+          completed++;
+          if (isCancelled()) return;
+          onProgress?.call(completed, total);
+          if (reachable) {
+            onHostFound(HostScanResult(ip: ip));
+          }
+        }),
+      );
     }
   }
 

@@ -46,9 +46,7 @@ void main() {
 
     expect(
       find.textContaining('Escanear Redes WiFi'),
-      Platform.isAndroid || Platform.isWindows
-          ? findsOneWidget
-          : findsNothing,
+      Platform.isAndroid || Platform.isWindows ? findsOneWidget : findsNothing,
     );
   });
 }

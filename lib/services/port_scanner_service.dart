@@ -81,18 +81,20 @@ class PortScannerService {
     for (var i = 0; i < entries.length; i += concurrency) {
       if (isCancelled()) return;
       final batch = entries.skip(i).take(concurrency);
-      await Future.wait(batch.map((entry) async {
-        final isOpen = await _isPortOpen(host, entry.key, timeout);
-        if (!isCancelled()) {
-          onResult(
-            PortScanResult(
-              port: entry.key,
-              service: entry.value,
-              isOpen: isOpen,
-            ),
-          );
-        }
-      }));
+      await Future.wait(
+        batch.map((entry) async {
+          final isOpen = await _isPortOpen(host, entry.key, timeout);
+          if (!isCancelled()) {
+            onResult(
+              PortScanResult(
+                port: entry.key,
+                service: entry.value,
+                isOpen: isOpen,
+              ),
+            );
+          }
+        }),
+      );
     }
   }
 

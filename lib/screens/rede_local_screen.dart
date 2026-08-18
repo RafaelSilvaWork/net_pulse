@@ -177,9 +177,7 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
                           ? const SizedBox(
                               width: 20,
                               height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.wifi_find),
                       label: Text(
@@ -226,10 +224,7 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
                 const Expanded(
                   child: Text(
                     'Dispositivos Encontrados:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 if (!_isSearching && _dispositivosAtivos.isNotEmpty)

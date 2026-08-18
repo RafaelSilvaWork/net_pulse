@@ -59,9 +59,7 @@ class _NetPulseHomeState extends State<NetPulseHome> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _maybeShowDisclaimer(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowDisclaimer());
   }
 
   Future<void> _maybeShowDisclaimer() async {
