@@ -21,6 +21,7 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
   bool _loadingLocalIp = true;
   int _progressCompleted = 0;
   int _progressTotal = 0;
+  final Map<String, String?> _hostnames = {};
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
   Future<void> _buscarDispositivos() async {
     setState(() {
       _dispositivosAtivos.clear();
+      _hostnames.clear();
       _isSearching = true;
       _cancelRequested = false;
       _statusMessage = 'Detectando rede local...';
@@ -84,6 +86,7 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
       onHostFound: (result) {
         if (!mounted) return;
         setState(() => _dispositivosAtivos.add(result));
+        _resolveHostname(result.ip);
       },
     );
 
@@ -110,6 +113,12 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
     setState(() => _cancelRequested = true);
   }
 
+  Future<void> _resolveHostname(String ip) async {
+    final hostname = await NetworkScannerService.resolveHostname(ip);
+    if (!mounted || hostname == null) return;
+    setState(() => _hostnames[ip] = hostname);
+  }
+
   void _compartilharResultados() {
     final buffer = StringBuffer(
       'NetPulse — dispositivos encontrados na rede local\n\n',
@@ -118,7 +127,8 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
       buffer.writeln('Nenhum dispositivo encontrado.');
     } else {
       for (final host in _dispositivosAtivos) {
-        buffer.writeln(host.ip);
+        final hostname = _hostnames[host.ip];
+        buffer.writeln(hostname != null ? '$hostname (${host.ip})' : host.ip);
       }
     }
     Share.share(buffer.toString());
@@ -236,13 +246,15 @@ class _RedeLocalScreenState extends State<RedeLocalScreen> {
                 itemCount: _dispositivosAtivos.length,
                 itemBuilder: (context, index) {
                   final host = _dispositivosAtivos[index];
+                  final hostname = _hostnames[host.ip];
                   return Card(
                     child: ListTile(
                       leading: const Icon(
                         Icons.devices_other,
                         color: Colors.blueAccent,
                       ),
-                      title: Text(host.ip),
+                      title: Text(hostname ?? host.ip),
+                      subtitle: hostname != null ? Text(host.ip) : null,
                     ),
                   );
                 },

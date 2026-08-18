@@ -64,4 +64,23 @@ class NetworkScannerService {
     }
     return false;
   }
+
+  /// Best-effort reverse DNS lookup for a host's name (e.g. the hostname a
+  /// router registers for its DHCP clients). Not every router publishes
+  /// this, so a null result — just no name available — is expected and
+  /// callers should fall back to showing the IP.
+  static Future<String?> resolveHostname(
+    String ip, {
+    Duration timeout = const Duration(seconds: 2),
+  }) async {
+    try {
+      final result = await InternetAddress(ip).reverse().timeout(timeout);
+      if (result.host.isNotEmpty && result.host != ip) {
+        return result.host;
+      }
+    } catch (_) {
+      // No PTR record / name available for this IP.
+    }
+    return null;
+  }
 }
