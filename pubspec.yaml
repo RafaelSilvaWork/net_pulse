@@ -45,6 +45,11 @@ dependencies:
   # Shares scan results through the OS share sheet.
   share_plus: ^10.1.4
 
+  # WiFi network (SSID) scanning on Android. This is a maintained fork of the
+  # original wifi_scan package — wifi_scan itself is stuck on an old Dart SDK
+  # constraint (<3.0.0) and won't resolve against this project's SDK.
+  flutter_wifi_scan: ^0.4.1+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

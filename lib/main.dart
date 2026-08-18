@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/historico_screen.dart';
 import 'screens/rede_local_screen.dart';
+import 'screens/redes_wifi_screen.dart';
 import 'screens/scanner_portas_screen.dart';
 
 void main() {
@@ -44,12 +45,14 @@ class _NetPulseHomeState extends State<NetPulseHome> {
   final List<Widget> _telas = [
     const ScannerPortasScreen(),
     const RedeLocalScreen(),
+    const RedesWifiScreen(),
     const HistoricoScreen(),
   ];
 
   static const List<(IconData, String)> _destinations = [
     (Icons.radar, 'Scanner de Portas'),
     (Icons.devices, 'Dispositivos na Rede'),
+    (Icons.wifi_find, 'Redes WiFi'),
     (Icons.history, 'Histórico'),
   ];
 

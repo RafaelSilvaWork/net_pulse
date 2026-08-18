@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +20,8 @@ void main() {
 
     expect(find.text('Scanner de Portas'), findsWidgets);
     expect(find.text('Dispositivos na Rede'), findsWidgets);
+    expect(find.text('Redes WiFi'), findsWidgets);
+    expect(find.text('Histórico'), findsWidgets);
     expect(find.text('Endereço IP Alvo'), findsOneWidget);
   });
 
@@ -30,5 +34,21 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Varrer Rede Local'), findsOneWidget);
+  });
+
+  testWidgets('Switching tabs shows the WiFi networks screen', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const NetPulseApp());
+
+    await tester.tap(find.text('Redes WiFi'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining('Escanear Redes WiFi'),
+      Platform.isAndroid || Platform.isWindows
+          ? findsOneWidget
+          : findsNothing,
+    );
   });
 }
